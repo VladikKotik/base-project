@@ -4,6 +4,8 @@ public class TaskSalvationService {
 
     public static String reverseLetter(String s){
 
+        if(s==null) return "";
+
         char[] sChar = s.toCharArray();
         int left = 0;
         int right = sChar.length-1;
