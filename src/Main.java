@@ -1,7 +1,14 @@
+import config.FileRepositoryFactory;
+import model.PreferableFileType;
+import service.MainShopService;
 import service.TaskSalvationService;
 
 public class Main {
     public static void main(String[] args) {
-        System.out.println(TaskSalvationService.reverseLetter("J@va the be$t!123"));
+        MainShopService mss = new MainShopService();
+        mss.processOrders(PreferableFileType.NOEXT,PreferableFileType.NOEXT);
+
     }
+
+
 }
