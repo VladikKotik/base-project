@@ -3,7 +3,6 @@ import base.project.model.OrderIncoming;
 import base.project.repository.OrdersRepository;
 import base.project.repository.ShopPriceDataRepo;
 import base.project.service.ClientService;
-import base.project.service.InitService;
 import base.project.service.MainShopService;
 import base.project.service.ShopPriceService;
 import org.junit.jupiter.api.Test;
@@ -11,6 +10,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -29,7 +29,7 @@ public class MockShopTests {
     ShopPriceDataRepo shopPriceDataRepo;
 
     @Test
-    public void shopTest() {
+    public void shopTest() throws IOException {
         ArrayList<OrderIncoming> orders = new ArrayList<>(List.of(
                 new OrderIncoming("Industrial", new BigDecimal("8800"), LocalDateTime.parse("2021-02-09T16:00:22")),
                 new OrderIncoming("Power Engineer", new BigDecimal("17480"), LocalDateTime.parse("2021-02-09T08:42:59")),
@@ -53,17 +53,19 @@ public class MockShopTests {
 
         ShopPriceService shopPriceService = new ShopPriceService(shopPriceDataRepo.getDefaultPriceForKilo(), shopPriceDataRepo.getDefaultStartDiscount(), shopPriceDataRepo.getDefaultDiscountStep());
 
-        ClientService clientService = InitService.initClientsService(ordersRepository,shopPriceService);
+
+        ClientService clientService = new ClientService(shopPriceService);
+        clientService.initClientsFromOrders(orders);
 
         MainShopService mss = new MainShopService(ordersRepository, ordersRepository, clientService, shopPriceService);
 
-        mss.processOrders();
-
-        OrderCheckout testOrder = mss.getTestOrder();
 
 
+        OrderCheckout testOrder = mss.processOrders().get(0);
 
-        boolean orderState = BigDecimal.valueOf(65650.00).compareTo(testOrder.getTotalPrice()) == 0 && "Pyramid".equals(mss.getTestOrder().getClientName());
+
+
+        boolean orderState = BigDecimal.valueOf(65650.00).compareTo(testOrder.getTotalPrice()) == 0 && "Pyramid".equals(testOrder.getClientName());
 
         assertTrue(orderState);
     }

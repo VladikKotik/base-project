@@ -5,6 +5,7 @@ import base.project.model.OrderCheckout;
 import base.project.model.OrderIncoming;
 import base.project.repository.OrdersRepository;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
@@ -28,7 +29,7 @@ public class MainShopService {
         this.shopPriceService = shopPriceService;
     }
 
-    public void processOrders() {
+    public List<OrderCheckout> processOrders() throws IOException {
 
         ArrayList<OrderCheckout> ordersReadyToCheckout = new ArrayList<>();
 
@@ -53,15 +54,10 @@ public class MainShopService {
             ordersReadyToCheckout.add(new OrderCheckout(clientName, totalOrderSumm));
         }
 
-        //костыль для мок тестов, но я ниче не хочу возвращать из этого метода, может и неправильно это
-        testCheckoutOrder = ordersReadyToCheckout.get(0);
-
 
         outputRepo.submitOrders(ordersReadyToCheckout);
+        return ordersReadyToCheckout;
     }
 
-    public OrderCheckout getTestOrder() {
-        return testCheckoutOrder;
-    }
 
 }

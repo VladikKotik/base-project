@@ -16,7 +16,7 @@ public class ClientService {
     }
 
     public void initClientsFromOrders(List<OrderIncoming> orders) {
-        for (OrderIncoming order : orders) {
+        for (OrderIncoming order : orders.stream().sorted().toList()) {
             if (!clients.containsKey(order.getClientName())) {
                 String clientName = order.getClientName();
                 clients.put(clientName, new Client(clientName, shopPriceService.getCurrentDiscountAndDecreaseForNextClient()));

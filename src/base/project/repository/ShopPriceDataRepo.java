@@ -1,17 +1,23 @@
 package base.project.repository;
 
+import io.github.cdimascio.dotenv.Dotenv;
+
 import java.math.BigDecimal;
 
 public class ShopPriceDataRepo {
+
+    private final Dotenv dotenv = Dotenv.load();
+
+
     public BigDecimal getDefaultPriceForKilo() {
-        return BigDecimal.valueOf(100);
+        return new BigDecimal(dotenv.get("PRICE_FOR_KILO"));
     }
 
     public BigDecimal getDefaultStartDiscount() {
-        return BigDecimal.valueOf(0.5);
+        return new BigDecimal(dotenv.get("DEFAULT_START_DISCOUNT"));
     }
 
     public BigDecimal getDefaultDiscountStep() {
-        return BigDecimal.valueOf(0.05);
+        return new BigDecimal(dotenv.get("DISCOUNT_STEP"));
     }
 }
