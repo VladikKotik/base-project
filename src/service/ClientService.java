@@ -2,6 +2,7 @@ package service;
 
 import model.Client;
 import model.OrderIncoming;
+import model.ShopPriceData;
 
 import java.util.HashMap;
 import java.util.List;
@@ -13,7 +14,7 @@ public class ClientService {
         for (OrderIncoming order : orders) {
             if(!clients.containsKey(order.getClientName())){
                 String clientName = order.getClientName();
-                clients.put(clientName, new Client(clientName,ShopPriceData.getCurrentDiscount()));
+                clients.put(clientName, new Client(clientName, ShopPriceData.getCurrentDiscount()));
             }
         }
     }

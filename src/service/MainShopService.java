@@ -1,11 +1,10 @@
 package service;
 
-import config.FileRepositoryFactory;
 import model.Client;
 import model.OrderCheckout;
 import model.OrderIncoming;
-import model.PreferableFileType;
 import repository.OrdersRepository;
+import model.ShopPriceData;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -46,7 +45,7 @@ public class MainShopService {
             Client clientosina = clientService.getClients().get(clientName);
 
             //количество кг × цена за кг × (1 − скидка)
-            BigDecimal totalOrderSumm = totalAmountOfGoodsForClient.multiply(ShopPriceData.PRICE_FOR_KILO.multiply(BigDecimal.ONE.subtract(clientosina.getPersonalDiscount())));
+            BigDecimal totalOrderSumm = totalAmountOfGoodsForClient.multiply(ShopPriceData.priceForKilo.multiply(BigDecimal.ONE.subtract(clientosina.getPersonalDiscount())));
 
             ordersReadyToCheckout.add(new OrderCheckout(clientName,totalOrderSumm));
         }

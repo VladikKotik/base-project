@@ -1,11 +1,13 @@
 import model.OrderCheckout;
 import model.OrderIncoming;
+import model.ShopPriceData;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.internal.matchers.Or;
 import org.mockito.junit.jupiter.MockitoExtension;
 import repository.OrdersRepository;
+import repository.ShopPriceDataRepo;
 import service.ClientService;
 import service.InitService;
 import service.MainShopService;
@@ -26,6 +28,9 @@ public class MockShopTests {
     @Mock
     OrdersRepository ordersRepository;
 
+    @Mock
+    ShopPriceDataRepo shopPriceDataRepo;
+
     @Test
     public void shopTest(){
         ArrayList<OrderIncoming> orders = new ArrayList<>(List.of(
@@ -44,6 +49,13 @@ public class MockShopTests {
                 new OrderIncoming("Pyramid",        new BigDecimal("10100"), LocalDateTime.parse("2021-02-09T09:11:43"))
         ));
         when(ordersRepository.getOrders()).thenReturn(orders);
+
+        when(shopPriceDataRepo.getDefaultDiscountStep()).thenReturn(BigDecimal.valueOf(0.05));
+        when(shopPriceDataRepo.getDefaultPriceForKilo()).thenReturn(BigDecimal.valueOf(10));
+        when(shopPriceDataRepo.getDefaultStartDiscount()).thenReturn(BigDecimal.valueOf(0.5));
+
+        ShopPriceData.setDefaultValues(shopPriceDataRepo.getDefaultPriceForKilo(),shopPriceDataRepo.getDefaultStartDiscount(),shopPriceDataRepo.getDefaultDiscountStep());
+
 
         ClientService clientService = InitService.initClientsService(ordersRepository);
 
