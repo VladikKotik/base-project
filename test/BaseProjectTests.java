@@ -1,5 +1,5 @@
 import org.junit.jupiter.api.Test;
-import service.TaskSalvationService;
+import base.project.service.TaskSalvationService;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

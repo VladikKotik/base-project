@@ -1,12 +1,12 @@
-package model;
+package base.project.model;
 
 import java.math.BigDecimal;
 
 public class OrderCheckout {
 
-    private String clientName;
+    private final String clientName;
 
-    private BigDecimal totalPrice;
+    private final BigDecimal totalPrice;
 
     public OrderCheckout(String clientName, BigDecimal totalPrice) {
         this.clientName = clientName;

@@ -1,4 +1,4 @@
-package service.exceptions;
+package base.project.service.exceptions;
 
 public class PasswordNotConfirmedException extends RuntimeException{
     public PasswordNotConfirmedException(String message){

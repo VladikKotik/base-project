@@ -1,10 +1,5 @@
 import org.junit.jupiter.api.Test;
-import service.AuthService;
-import service.TaskSalvationService;
-import service.exceptions.TooLongFieldException;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import base.project.service.AuthService;
 
 
 public class AuthServiceTests {

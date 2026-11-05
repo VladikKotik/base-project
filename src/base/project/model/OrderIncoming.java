@@ -1,21 +1,19 @@
-package model;
+package base.project.model;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Comparator;
 
-public class OrderIncoming  implements Comparable{
+public class OrderIncoming implements Comparable {
 
-    private String clientName;
+    private final String clientName;
 
-    private BigDecimal amountOfGoods;
+    private final BigDecimal amountOfGoods;
 
-    private LocalDateTime orderDate;
+    private final LocalDateTime orderDate;
 
     public OrderIncoming(String clientName, BigDecimal amountOfGoods, LocalDateTime orderDate) {
-        this.clientName=clientName;
-        this.amountOfGoods=amountOfGoods;
+        this.clientName = clientName;
+        this.amountOfGoods = amountOfGoods;
         this.orderDate = orderDate;
     }
 
@@ -23,7 +21,7 @@ public class OrderIncoming  implements Comparable{
     @Override
     public int compareTo(Object o) {
         if (!(o instanceof OrderIncoming order)) {
-            throw new ClassCastException("Объект не является сотрудником (OrderIncoming)");
+            throw new ClassCastException("Объект не является заказом (OrderIncoming)");
         }
         return this.orderDate.compareTo(order.orderDate);
     }

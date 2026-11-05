@@ -1,31 +1,34 @@
-package service;
+package base.project.service;
 
-import model.Client;
-import model.OrderCheckout;
-import model.OrderIncoming;
-import repository.OrdersRepository;
-import model.ShopPriceData;
+import base.project.model.Client;
+import base.project.model.OrderCheckout;
+import base.project.model.OrderIncoming;
+import base.project.repository.OrdersRepository;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.*;
 
 public class MainShopService {
 
-    private OrdersRepository inputRepo;
+    private final OrdersRepository inputRepo;
 
-    private OrdersRepository outputRepo;
+    private final OrdersRepository outputRepo;
 
-    private ClientService clientService;
+    private final ClientService clientService;
 
-    private OrderCheckout testCheckoutOrder = new OrderCheckout("",BigDecimal.ZERO);
+    private final ShopPriceService shopPriceService;
 
-    public MainShopService(OrdersRepository inputRepo, OrdersRepository outputRepo, ClientService clientService) {
+    private OrderCheckout testCheckoutOrder = new OrderCheckout("", BigDecimal.ZERO);
+
+    public MainShopService(OrdersRepository inputRepo, OrdersRepository outputRepo, ClientService clientService, ShopPriceService shopPriceService) {
         this.inputRepo = inputRepo;
         this.outputRepo = outputRepo;
         this.clientService = clientService;
+        this.shopPriceService = shopPriceService;
     }
 
-    public void processOrders(){
+    public void processOrders() {
 
         ArrayList<OrderCheckout> ordersReadyToCheckout = new ArrayList<>();
 
@@ -45,9 +48,9 @@ public class MainShopService {
             Client clientosina = clientService.getClients().get(clientName);
 
             //количество кг × цена за кг × (1 − скидка)
-            BigDecimal totalOrderSumm = totalAmountOfGoodsForClient.multiply(ShopPriceData.priceForKilo.multiply(BigDecimal.ONE.subtract(clientosina.getPersonalDiscount())));
+            BigDecimal totalOrderSumm = (totalAmountOfGoodsForClient.multiply(shopPriceService.getPriceForKilo().multiply(BigDecimal.ONE.subtract(clientosina.getPersonalDiscount())))).setScale(2, RoundingMode.HALF_UP);
 
-            ordersReadyToCheckout.add(new OrderCheckout(clientName,totalOrderSumm));
+            ordersReadyToCheckout.add(new OrderCheckout(clientName, totalOrderSumm));
         }
 
         //костыль для мок тестов, но я ниче не хочу возвращать из этого метода, может и неправильно это
@@ -57,7 +60,7 @@ public class MainShopService {
         outputRepo.submitOrders(ordersReadyToCheckout);
     }
 
-    public OrderCheckout getTestOrder(){
+    public OrderCheckout getTestOrder() {
         return testCheckoutOrder;
     }
 

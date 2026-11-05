@@ -1,7 +1,7 @@
-package repository;
+package base.project.repository;
 
-import model.OrderCheckout;
-import model.OrderIncoming;
+import base.project.model.OrderCheckout;
+import base.project.model.OrderIncoming;
 
 import java.util.ArrayList;
 

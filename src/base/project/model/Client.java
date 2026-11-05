@@ -1,4 +1,4 @@
-package model;
+package base.project.model;
 
 import java.math.BigDecimal;
 
@@ -13,7 +13,8 @@ public class Client {
         this.personalDiscount = personalDiscount;
     }
 
-    public Client(){}
+    public Client() {
+    }
 
 
     public BigDecimal getPersonalDiscount() {
@@ -34,7 +35,7 @@ public class Client {
 
 
     @Override
-    public String toString(){
-        return "name: "+name+" discount "+personalDiscount;
+    public String toString() {
+        return "name: " + name + " discount " + personalDiscount;
     }
 }
