@@ -18,27 +18,32 @@ public class MainShopService {
 
     private ClientService clientService;
 
+    private OrderCheckout testCheckoutOrder = new OrderCheckout("",BigDecimal.ZERO);
 
-    public void processOrders(PreferableFileType inputPreferableType,PreferableFileType outputPreferableType){
+    public MainShopService(OrdersRepository inputRepo, OrdersRepository outputRepo, ClientService clientService) {
+        this.inputRepo = inputRepo;
+        this.outputRepo = outputRepo;
+        this.clientService = clientService;
+    }
 
-        initOrdersRepo(inputPreferableType,outputPreferableType);
+    public void processOrders(){
 
         ArrayList<OrderCheckout> ordersReadyToCheckout = new ArrayList<>();
 
-        List<OrderIncoming> sortedOrdersByTime = inputRepo.getOrders().stream().sorted().toList();
+        List<OrderIncoming> orders = inputRepo.getOrders();
 
-        initClientsService(sortedOrdersByTime);
+        //ваще мы типа как будто 2 раза зря ходим за заказами в репозиторий, НО потом в след версиях
+        // мы клиентов будем дергать откуда-нибудь по нормальному, а не из заказов
 
         Set<String> clientsNames = clientService.getClients().keySet();
 
         for (String clientName : clientsNames) {
-            BigDecimal totalAmountOfGoodsForClient = sortedOrdersByTime.stream()
+            BigDecimal totalAmountOfGoodsForClient = orders.stream()
                     .filter(it -> it.getClientName().equals(clientName))
                     .map(OrderIncoming::getAmountOfGoods)
                     .reduce(BigDecimal.ZERO, BigDecimal::add);
 
             Client clientosina = clientService.getClients().get(clientName);
-
 
             //количество кг × цена за кг × (1 − скидка)
             BigDecimal totalOrderSumm = totalAmountOfGoodsForClient.multiply(ShopPriceData.PRICE_FOR_KILO.multiply(BigDecimal.ONE.subtract(clientosina.getPersonalDiscount())));
@@ -46,22 +51,15 @@ public class MainShopService {
             ordersReadyToCheckout.add(new OrderCheckout(clientName,totalOrderSumm));
         }
 
+        //костыль для мок тестов, но я ниче не хочу возвращать из этого метода, может и неправильно это
+        testCheckoutOrder = ordersReadyToCheckout.get(0);
+
+
         outputRepo.submitOrders(ordersReadyToCheckout);
-
     }
 
-    private void initOrdersRepo(PreferableFileType inputPreferableType,PreferableFileType outputPreferableType){
-        inputRepo = FileRepositoryFactory.getOrdersRepository(inputPreferableType);
-        if (inputPreferableType==outputPreferableType) {
-            outputRepo = inputRepo;
-        }else {
-            outputRepo = FileRepositoryFactory.getOrdersRepository(outputPreferableType);
-        }
-    }
-
-    private void initClientsService(List<OrderIncoming> sortedOrdersByTime){
-        clientService = new ClientService();
-        clientService.initClientsFromOrders(sortedOrdersByTime);
+    public OrderCheckout getTestOrder(){
+        return testCheckoutOrder;
     }
 
 }

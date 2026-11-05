@@ -17,4 +17,12 @@ public class OrderCheckout {
     public String toString(){
         return clientName+" - "+totalPrice;
     }
+
+    public BigDecimal getTotalPrice() {
+        return totalPrice;
+    }
+
+    public String getClientName() {
+        return clientName;
+    }
 }

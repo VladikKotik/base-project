@@ -6,7 +6,7 @@ public class Client {
 
     private String name;
 
-    private BigDecimal personalDiscount;//=-1.0;
+    private BigDecimal personalDiscount;
 
     public Client(String name, BigDecimal personalDiscount) {
         this.name = name;

@@ -1,12 +1,22 @@
-import config.FileRepositoryFactory;
 import model.PreferableFileType;
+import repository.OrdersRepository;
+import service.ClientService;
+import service.InitService;
 import service.MainShopService;
-import service.TaskSalvationService;
 
 public class Main {
     public static void main(String[] args) {
-        MainShopService mss = new MainShopService();
-        mss.processOrders(PreferableFileType.NOEXT,PreferableFileType.NOEXT);
+
+        InitService.initOrdersRepo(PreferableFileType.TXT,PreferableFileType.TXT);
+
+        OrdersRepository inputRepo = InitService.getInputRepo();
+        OrdersRepository outputRepo = InitService.getOutputRepo();
+
+        ClientService clientService = InitService.initClientsService(inputRepo);
+
+        MainShopService mss = new MainShopService(inputRepo,outputRepo,clientService);
+
+        mss.processOrders();
 
     }
 

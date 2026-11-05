@@ -1,15 +1,23 @@
+import model.OrderCheckout;
 import model.OrderIncoming;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.internal.matchers.Or;
 import org.mockito.junit.jupiter.MockitoExtension;
 import repository.OrdersRepository;
+import service.ClientService;
+import service.InitService;
+import service.MainShopService;
+import service.TaskSalvationService;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -37,7 +45,16 @@ public class MockShopTests {
         ));
         when(ordersRepository.getOrders()).thenReturn(orders);
 
+        ClientService clientService = InitService.initClientsService(ordersRepository);
 
+        MainShopService mss = new MainShopService(ordersRepository,ordersRepository,clientService);
 
+        mss.processOrders();
+
+        OrderCheckout testOrder = mss.getTestOrder();
+
+        boolean orderState = BigDecimal.valueOf(65650.00).compareTo(testOrder.getTotalPrice())==0 && "Pyramid".equals(mss.getTestOrder().getClientName());
+
+        assertTrue(orderState);
     }
 }
